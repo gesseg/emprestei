@@ -68,6 +68,20 @@ def edit_item(id):
     conn.close()
     return render_template('edit_item.html', item=item)
 
+
+def create_table():
+    conn = get_db_connection()
+    conn.execute('''
+        CREATE TABLE IF NOT EXISTS emprestimos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome_colaborador TEXT NOT NULL,
+            item_emprestimo TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
+    
+
 # Rota para deletar um item
 @app.route('/delete/<int:id>', methods=('POST',))
 def delete_item(id):
