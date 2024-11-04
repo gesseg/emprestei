@@ -5,7 +5,7 @@ import sqlite3
 app = Flask(__name__)
 
 # Define o caminho absoluto para o banco de dados
-DB_PATH = os.path.join(os.path.dirname(__file__), 'estoque-1.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), 'estoque.db')
 
 # Conectar ao banco de dados
 def get_db_connection():
@@ -20,12 +20,16 @@ def create_table():
         CREATE TABLE IF NOT EXISTS itens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
-            item TEXT NOT NULL,  # Campo para múltiplos itens de empréstimo
+            item TEXT NOT NULL,
             quantidade INTEGER NOT NULL
         )
     ''')
     conn.commit()
     conn.close()
+
+# Verifique se o banco de dados e a tabela existem antes de iniciar o aplicativo
+if not os.path.exists(DB_PATH):
+    create_table()  # Cria o banco de dados e a tabela antes de iniciar
 
 # Rota para listar os itens
 @app.route('/')
@@ -40,8 +44,8 @@ def index():
 def add_item():
     if request.method == 'POST':
         nome = request.form['nome']
-        itens_selecionados = request.form.getlist('item')  # Recebe os itens como lista
-        item = ', '.join(itens_selecionados)  # Converte a lista para uma string separada por vírgulas
+        itens_selecionados = request.form.getlist('item')
+        item = ', '.join(itens_selecionados)
         quantidade = request.form['quantidade']
 
         conn = get_db_connection()
@@ -65,7 +69,7 @@ def edit_item(id):
     if request.method == 'POST':
         nome = request.form['nome']
         itens_selecionados = request.form.getlist('item')
-        item_str = ', '.join(itens_selecionados)  # Converte a lista para uma string separada por vírgulas
+        item_str = ', '.join(itens_selecionados)
         quantidade = request.form['quantidade']
 
         conn.execute('UPDATE itens SET nome = ?, item = ?, quantidade = ? WHERE id = ?',
@@ -87,7 +91,6 @@ def delete_item(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    create_table()  # Cria a tabela no início, se não existir
     app.run(debug=True)
 
 
