@@ -59,6 +59,9 @@ def edit_item(id):
     conn = get_db_connection()
     item = conn.execute('SELECT * FROM itens WHERE id = ?', (id,)).fetchone()
 
+    if item is None:
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         nome = request.form['nome']
         itens_selecionados = request.form.getlist('item')
@@ -84,6 +87,6 @@ def delete_item(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    create_table()
+    create_table()  # Cria a tabela no início, se não existir
     app.run(debug=True)
 
