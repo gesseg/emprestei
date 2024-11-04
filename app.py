@@ -5,7 +5,7 @@ import sqlite3
 app = Flask(__name__)
 
 # Define o caminho absoluto para o banco de dados
-DB_PATH = os.path.join(os.path.dirname(__file__), 'estoque.db')
+DB_PATH = os.path.join(os.path.dirname(__file__), 'estoque-1.db')
 
 # Conectar ao banco de dados
 def get_db_connection():
