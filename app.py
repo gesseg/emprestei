@@ -68,65 +68,6 @@ def edit_item(id):
     conn.close()
     return render_template('edit_item.html', item=item)
 
-#adicionadodaqui 
-
-def create_table():
-    conn = get_db_connection()
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS emprestimos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome_colaborador TEXT NOT NULL,
-            item_emprestimo TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
-
-
-@app.route('/add', methods=('GET', 'POST'))
-def add_emprestimo():
-    if request.method == 'POST':
-        nome_colaborador = request.form['nome_colaborador']
-        item_emprestimo = ', '.join(request.form.getlist('item_emprestimo'))  # Coleta os itens selecionados como uma string
-
-        conn = get_db_connection()
-        conn.execute('INSERT INTO emprestimos (nome_colaborador, item_emprestimo) VALUES (?, ?)',
-                     (nome_colaborador, item_emprestimo))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('index'))
-
-    return render_template('add_emprestimo.html')
-    
-
-@app.route('/')
-def index():
-    conn = get_db_connection()
-    emprestimos = conn.execute('SELECT * FROM emprestimos').fetchall()
-    conn.close()
-    return render_template('index.html', emprestimos=emprestimos)
-
-@app.route('/edit/<int:id>', methods=('GET', 'POST'))
-def edit_emprestimo(id):
-    conn = get_db_connection()
-    emprestimo = conn.execute('SELECT * FROM emprestimos WHERE id = ?', (id,)).fetchone()
-
-    if request.method == 'POST':
-        nome_colaborador = request.form['nome_colaborador']
-        item_emprestimo = ', '.join(request.form.getlist('item_emprestimo'))
-
-        conn.execute('UPDATE emprestimos SET nome_colaborador = ?, item_emprestimo = ? WHERE id = ?',
-                     (nome_colaborador, item_emprestimo, id))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('index'))
-
-    conn.close()
-    return render_template('edit_emprestimo.html', emprestimo=emprestimo)
-
-
-#adicionadoateaqui 
-
 # Rota para deletar um item
 @app.route('/delete/<int:id>', methods=('POST',))
 def delete_item(id):
