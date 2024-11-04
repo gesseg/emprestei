@@ -20,8 +20,8 @@ def create_table():
         CREATE TABLE IF NOT EXISTS itens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
-            item TEXT NOT NULL,
-            quantidade INTEGER NOT NULL,
+            item TEXT NOT NULL,  # Campo para múltiplos itens de empréstimo, agora usando "item"
+            quantidade INTEGER NOT NULL
         )
     ''')
     conn.commit()
@@ -40,7 +40,8 @@ def index():
 def add_item():
     if request.method == 'POST':
         nome = request.form['nome']
-        item = request.form['item']
+        itens_selecionados = request.form.getlist('item')  # Recebe os itens como lista
+        item = ', '.join(itens_selecionados)  # Converte a lista para uma string separada por vírgulas
         quantidade = request.form['quantidade']
 
         conn = get_db_connection()
@@ -60,7 +61,8 @@ def edit_item(id):
 
     if request.method == 'POST':
         nome = request.form['nome']
-        item = request.form['item']
+        itens_selecionados = request.form.getlist('item')  # Recebe os itens como lista
+        item = ', '.join(itens_selecionados)  # Converte a lista para uma string separada por vírgulas
         quantidade = request.form['quantidade']
 
         conn.execute('UPDATE itens SET nome = ?, item = ?, quantidade = ? WHERE id = ?',
