@@ -26,6 +26,7 @@ def create_table():
     ''')
     conn.commit()
     conn.close()
+    
 
 # Rota para listar os itens
 @app.route('/')
