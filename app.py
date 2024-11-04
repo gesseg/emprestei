@@ -20,8 +20,8 @@ def create_table():
         CREATE TABLE IF NOT EXISTS itens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
+            item TEXT NOT NULL,
             quantidade INTEGER NOT NULL,
-            preco REAL NOT NULL
         )
     ''')
     conn.commit()
@@ -40,12 +40,12 @@ def index():
 def add_item():
     if request.method == 'POST':
         nome = request.form['nome']
+        item = request.form['item']
         quantidade = request.form['quantidade']
-        preco = request.form['preco']
 
         conn = get_db_connection()
-        conn.execute('INSERT INTO itens (nome, quantidade, preco) VALUES (?, ?, ?)',
-                     (nome, quantidade, preco))
+        conn.execute('INSERT INTO itens (nome, item, quantidade) VALUES (?, ?, ?)',
+                     (nome, item, quantidade))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
@@ -60,11 +60,11 @@ def edit_item(id):
 
     if request.method == 'POST':
         nome = request.form['nome']
+        item = request.form['item']
         quantidade = request.form['quantidade']
-        preco = request.form['preco']
 
-        conn.execute('UPDATE itens SET nome = ?, quantidade = ?, preco = ? WHERE id = ?',
-                     (nome, quantidade, preco, id))
+        conn.execute('UPDATE itens SET nome = ?, item = ?, quantidade = ? WHERE id = ?',
+                     (nome, item, quantidade, id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
