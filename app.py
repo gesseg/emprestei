@@ -1,11 +1,15 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
 
+# Define o caminho absoluto para o banco de dados
+DB_PATH = os.path.join(os.path.dirname(__file__), 'estoque.db')
+
 # Conectar ao banco de dados
 def get_db_connection():
-    conn = sqlite3.connect('estoque.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -80,3 +84,4 @@ def delete_item(id):
 if __name__ == '__main__':
     create_table()
     app.run(debug=True)
+
