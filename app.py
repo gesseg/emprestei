@@ -1,11 +1,15 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
 
+# Define o caminho absoluto para o banco de dados
+DB_PATH = os.path.join(os.path.dirname(__file__), 'estoque.db')
+
 # Conectar ao banco de dados
 def get_db_connection():
-    conn = sqlite3.connect('estoque.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -16,12 +20,16 @@ def create_table():
         CREATE TABLE IF NOT EXISTS itens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
-            quantidade INTEGER NOT NULL,
-            preco REAL NOT NULL
+            item TEXT NOT NULL,
+            quantidade INTEGER NOT NULL
         )
     ''')
     conn.commit()
     conn.close()
+
+# Verifique se o banco de dados e a tabela existem antes de iniciar o aplicativo
+if not os.path.exists(DB_PATH):
+    create_table()  # Cria o banco de dados e a tabela antes de iniciar
 
 # Rota para listar os itens
 @app.route('/')
@@ -36,12 +44,13 @@ def index():
 def add_item():
     if request.method == 'POST':
         nome = request.form['nome']
+        itens_selecionados = request.form.getlist('item')
+        item = ', '.join(itens_selecionados)
         quantidade = request.form['quantidade']
-        preco = request.form['preco']
 
         conn = get_db_connection()
-        conn.execute('INSERT INTO itens (nome, quantidade, preco) VALUES (?, ?, ?)',
-                     (nome, quantidade, preco))
+        conn.execute('INSERT INTO itens (nome, item, quantidade) VALUES (?, ?, ?)',
+                     (nome, item, quantidade))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
@@ -54,13 +63,17 @@ def edit_item(id):
     conn = get_db_connection()
     item = conn.execute('SELECT * FROM itens WHERE id = ?', (id,)).fetchone()
 
+    if item is None:
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         nome = request.form['nome']
+        itens_selecionados = request.form.getlist('item')
+        item_str = ', '.join(itens_selecionados)
         quantidade = request.form['quantidade']
-        preco = request.form['preco']
 
-        conn.execute('UPDATE itens SET nome = ?, quantidade = ?, preco = ? WHERE id = ?',
-                     (nome, quantidade, preco, id))
+        conn.execute('UPDATE itens SET nome = ?, item = ?, quantidade = ? WHERE id = ?',
+                     (nome, item_str, quantidade, id))
         conn.commit()
         conn.close()
         return redirect(url_for('index'))
@@ -78,5 +91,6 @@ def delete_item(id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    create_table()
     app.run(debug=True)
+
+

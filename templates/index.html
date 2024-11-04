@@ -6,25 +6,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Gestão de Estoque</h1>
+    <h1>Gestão de Estoque | Emprestei</h1>
     <a href="{{ url_for('add_item') }}">Adicionar Novo Item</a>
     <table>
         <tr>
             <th>ID</th>
             <th>Nome</th>
+            <th>Itens Emprestados</th>
             <th>Quantidade</th>
-            <th>Preço</th>
             <th>Ações</th>
         </tr>
         {% for item in itens %}
         <tr>
-            <td>{{ item.id }}</td>
-            <td>{{ item.nome }}</td>
-            <td>{{ item.quantidade }}</td>
-            <td>{{ item.preco }}</td>
+            <td>{{ item['id'] }}</td>
+            <td>{{ item['nome'] }}</td>
+            <td>{{ item['item'] }}</td> <!-- Exibe os itens emprestados -->
+            <td>{{ item['quantidade'] }}</td>
             <td>
-                <a href="{{ url_for('edit_item', id=item.id) }}">Editar</a>
-                <form action="{{ url_for('delete_item', id=item.id) }}" method="post" style="display:inline;">
+                <a href="{{ url_for('edit_item', id=item['id']) }}">Editar</a>
+                <form action="{{ url_for('delete_item', id=item['id']) }}" method="post" style="display:inline;">
                     <button type="submit">Excluir</button>
                 </form>
             </td>
