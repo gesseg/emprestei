@@ -26,7 +26,6 @@ def create_table():
     ''')
     conn.commit()
     conn.close()
-    
 
 # Rota para listar os itens
 @app.route('/')
@@ -90,4 +89,5 @@ def delete_item(id):
 if __name__ == '__main__':
     create_table()  # Cria a tabela no início, se não existir
     app.run(debug=True)
+
 
