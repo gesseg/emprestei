@@ -21,7 +21,7 @@
 </head>
 <body>
     <h1>Adicionar Item</h1>
-    <form method="post">
+    <form method="post" class="form-container">
         <label for="nome">Nome do Funcionário:</label>
         <input type="text" id="nome" name="nome" required>
         
@@ -45,8 +45,8 @@
         <label for="quantidade">Quantidade:</label>
         <input type="number" id="quantidade" name="quantidade" required>
         
-        <button type="submit">Adicionar</button>
+        <button type="submit" class="button">Adicionar</button>
     </form>
-    <a href="{{ url_for('index') }}">Voltar</a>
+    <a href="{{ url_for('index') }}" class="button-link">Voltar</a>
 </body>
 </html>
