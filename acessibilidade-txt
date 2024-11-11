@@ -1,0 +1,125 @@
+1. Planejamento e Conformidade
+Siga padrões de acessibilidade reconhecidos:
+WCAG (Web Content Accessibility Guidelines) para interfaces web.
+Section 508 (EUA) ou ABNT NBR 9050 (Brasil) para acessibilidade geral.
+Defina metas de acessibilidade no início do projeto:
+Identifique requisitos como suporte a leitores de tela, navegação por teclado e contraste.
+2. Testes Automatizados de Acessibilidade
+Utilize ferramentas para análise automatizada de acessibilidade:
+Para aplicações web construídas com Flask/Django:
+Ferramentas como axe (browser extension) ou lighthouse.
+Em Python, use pacotes como:
+pa11y (para testar sites).
+pytest-accessibility (para integrar testes de acessibilidade ao CI/CD).
+3. Interfaces Web e APIs
+Se sua aplicação Python inclui um front-end ou serve uma API, considere:
+
+Adicione rótulos semânticos:
+
+Garanta que botões, links e formulários tenham rótulos descritivos.
+html
+Copiar código
+<button aria-label="Salvar documento">Salvar</button>
+Navegação por teclado:
+
+Garanta que todas as interações possam ser realizadas sem mouse.
+Inclua atalhos de teclado e suporte a eventos como tab para navegação.
+Headers de resposta claros em APIs:
+
+Forneça mensagens de erro claras para facilitar o entendimento.
+json
+Copiar código
+{
+    "error": "Invalid date format. Use YYYY-MM-DD."
+}
+4. Suporte a Leitores de Tela
+Para aplicações desktop ou web, verifique compatibilidade com leitores de tela como:
+NVDA, JAWS (Windows).
+VoiceOver (MacOS).
+Garanta que as interfaces forneçam descrições alternativas:
+Use alt em imagens e aria-live para notificações dinâmicas.
+5. Contraste e Cores
+Garanta que o contraste entre texto e fundo seja suficiente:
+
+Use ferramentas como contrast-checker para verificar.
+Evite depender apenas de cores para transmitir informações:
+
+html
+Copiar código
+<div style="color: red;">Erro: Campo obrigatório.</div>
+Em vez disso:
+
+html
+Copiar código
+<div style="color: red;" role="alert">Erro: Campo obrigatório.</div>
+6. Documentação Inclusiva
+Escreva a documentação pensando em acessibilidade:
+Forneça tutoriais com texto e suporte a áudio ou vídeo com legendas.
+Inclua exemplos claros de como utilizar a aplicação.
+7. Entradas e Validações
+Certifique-se de que formulários lidem com entradas inesperadas ou assistidas:
+Valide campos com mensagens claras e concisas.
+python
+Copiar código
+def validate_email(email):
+    if "@" not in email:
+        raise ValueError("Por favor, insira um e-mail válido.")
+8. Testes com Usuários Reais
+Inclua pessoas com deficiência na fase de testes:
+Usuários com leitores de tela, deficiências motoras, entre outros.
+Utilize testes heurísticos para identificar problemas práticos.
+9. Acessibilidade em Aplicações Desktop
+Se você estiver usando Tkinter, PyQt ou Kivy:
+Utilize rótulos textuais (labels) bem definidos.
+Configure atalhos de teclado para facilitar a navegação.
+Exemplo em Tkinter:
+
+python
+Copiar código
+import tkinter as tk
+
+root = tk.Tk()
+root.title("Aplicação Acessível")
+
+button = tk.Button(root, text="Salvar", underline=0)  # Atalho: Alt+S
+button.pack()
+
+root.mainloop()
+10. Monitoramento e Atualização Contínuos
+Após implementar melhorias, use ferramentas como:
+WAVE para avaliação contínua de acessibilidade.
+Sentry para capturar feedback e problemas em tempo real.
+Estabeleça um processo regular de revisão de acessibilidade.
+Exemplo Completo: Flask com Acessibilidade
+Se você estiver usando Flask para construir uma aplicação web, garanta que as rotas e o HTML sejam acessíveis:
+
+Código em Flask:
+
+python
+Copiar código
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+Template HTML (index.html):
+
+html
+Copiar código
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Acessibilidade Exemplo</title>
+</head>
+<body>
+    <h1>Bem-vindo</h1>
+    <form>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" aria-required="true">
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
