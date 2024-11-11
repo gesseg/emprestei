@@ -1,0 +1,113 @@
+1. Escolha do Framework de Testes
+Utilize um framework de testes adequado, como:
+
+Unittest: Embutido no Python, ideal para testes unitários.
+Pytest: Mais flexível e popular, suporta testes unitários, de integração e parametrizados.
+Behave: Para testes de aceitação baseados em comportamento (BDD).
+2. Estruturação dos Testes
+Nomeação clara dos arquivos e funções de teste:
+Arquivos de teste devem começar com test_, como test_app.py.
+Funções de teste devem refletir a funcionalidade testada, como test_calcula_total().
+Organização dos testes em pastas:
+css
+Copiar código
+project/
+    src/
+        app.py
+    tests/
+        test_app.py
+3. Cobertura de Testes
+Testes Unitários: Testar funções e métodos isoladamente.
+Testes de Integração: Verificar a interação entre componentes do sistema.
+Testes de Regressão: Garantir que alterações no código não introduzam novos bugs.
+Testes de Aceitação: Validar o comportamento esperado pelos usuários finais.
+4. Mocking e Fixtures
+Use mocking para simular dependências externas, como APIs ou banco de dados, garantindo que os testes não sejam influenciados por fatores externos.
+
+Exemplo com unittest.mock:
+python
+Copiar código
+from unittest.mock import Mock
+
+api_client = Mock()
+api_client.get_data.return_value = {"status": "success"}
+Utilize fixtures do pytest para configurar estados iniciais dos testes:
+
+python
+Copiar código
+@pytest.fixture
+def sample_data():
+    return {"key": "value"}
+5. Testes Parametrizados
+Utilize testes parametrizados para reduzir a duplicação de código e testar diferentes cenários:
+
+python
+Copiar código
+import pytest
+
+@pytest.mark.parametrize("input,expected", [
+    (1, 2),
+    (2, 3),
+    (3, 4),
+])
+def test_increment(input, expected):
+    assert increment(input) == expected
+6. Validação de Erros
+Teste cenários onde erros ou entradas inválidas podem ocorrer:
+
+python
+Copiar código
+def test_invalid_input():
+    with pytest.raises(ValueError):
+        funcao_que_deve_lancar_erro(-1)
+7. Automação dos Testes
+Configure scripts de automação para rodar os testes.
+No setup.py ou com o tox.
+Configure um pipeline CI/CD para execução automática:
+Ferramentas: GitHub Actions, GitLab CI, Jenkins, etc.
+8. Relatórios e Cobertura de Código
+Utilize bibliotecas como coverage.py para gerar relatórios de cobertura:
+bash
+Copiar código
+pip install coverage
+coverage run -m pytest
+coverage report
+coverage html
+Certifique-se de manter uma cobertura de testes de pelo menos 80%, priorizando componentes críticos.
+9. Testes de Performance
+Utilize ferramentas como pytest-benchmark para identificar gargalos de desempenho:
+python
+Copiar código
+def test_function_speed(benchmark):
+    result = benchmark(some_function)
+    assert result == expected
+10. Revisão e Manutenção dos Testes
+Revise os testes regularmente para refletir alterações no código.
+Elimine testes redundantes ou desatualizados.
+Mantenha a base de testes simples e legível.
+Exemplo completo de teste em Python com pytest:
+
+Código a ser testado (src/app.py):
+
+python
+Copiar código
+def add(a, b):
+    if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+        raise ValueError("Both inputs must be numbers")
+    return a + b
+Teste (tests/test_app.py):
+
+python
+Copiar código
+import pytest
+from src.app import add
+
+def test_add_positive_numbers():
+    assert add(2, 3) == 5
+
+def test_add_negative_numbers():
+    assert add(-1, -1) == -2
+
+def test_add_invalid_input():
+    with pytest.raises(ValueError):
+        add("a", 1)
